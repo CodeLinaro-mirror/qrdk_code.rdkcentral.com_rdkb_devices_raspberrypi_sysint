@@ -235,7 +235,7 @@ useDirectRequest()
                        fi
                        uploadRetryCount=`expr $uploadRetryCount + 1`
                  done
-                 if [ $uploadRetryCount -eq 2]; then
+                 if [ $uploadRetryCount -eq 2 ]; then
                       ret=1
                       echo "HTTP telemetry curl upload failed!!!!!!!!!!!!!!!!!"
                  fi

@@ -341,7 +341,7 @@ uploadLogOnReboot()
                              fi
                              loguploadRetryCount=`expr $loguploadRetryCount + 1`
                          done
-                             if [ $loguploadRetryCount -eq 2]; then
+                             if [ $loguploadRetryCount -eq 2 ]; then
                                  echo "HTTP log upload failed!!!!!!!!!!!!!!!!!"
                              fi
                       fi
@@ -377,7 +377,6 @@ uploadLogOnReboot()
                  fi
                 sleep 60
                 echo "Done Uploading Logs and removing rtl_json.txt file"
-                rm -rf $PREV_LOG_PATH/$RpiMacAddress-Logs-$LOG_FILE
                 rm -rf $TELEMETRY_JSON_RESPONSE
                 rm -rf $PERSISTENT_PATH/*TELE*
 	fi
