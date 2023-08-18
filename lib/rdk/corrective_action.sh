@@ -714,10 +714,15 @@ resetNeeded()
                 ;;
             esac
 
-            vendor=`getVendorName`
-            modelName=`getModelName`
-            CMMac=`getCMMac`
-            echo_t "RDKB_SELFHEAL : <$level>CABLEMODEM[$vendor]:<99000007><$timestamp><$CMMac><$modelName> RM $ProcessName process not running , restarting it"
+            enable_TR69_Binary=$(syscfg get EnableTR69Binary)
+            if [ "$ProcessName" == "CcspTr069PaSsp" ] && [ "$BOX_TYPE" == "rpi" ] && [ "$enable_TR69_Binary" = "false" ]; then
+               echo_t "RDKB_SELFHEAL : CcspTr069PaSsp and enable_TR69_Binary is disabled"
+            else
+	       vendor=`getVendorName`
+	       modelName=`getModelName`
+	       CMMac=`getCMMac`
+	       echo_t "RDKB_SELFHEAL : <$level>Ethwan Gateway[$vendor]:<99000007><$timestamp><$CMMac><$modelName> RM $ProcessName process not running , restarting it"
+            fi
 
             case $SELFHEAL_TYPE in
                 "BASE"|"TCCBR")
@@ -827,10 +832,15 @@ resetNeeded()
 
             elif [ "$SELFHEAL_TYPE" = "BASE" ] && [ "$ProcessName" == "CcspTr069PaSsp" ]
             then
-                echo_t "RDKB_SELFHEAL : Resetting process $ProcessName"
-                cd /usr/ccsp/tr069pa
-                $BINPATH/CcspTr069PaSsp -subsys $Subsys
-                cd -
+                enable_TR69_Binary=$(syscfg get EnableTR69Binary)
+                if [ "$enable_TR69_Binary" = "false" ] && [ "$BOX_TYPE" == "rpi" ]; then
+                   echo_t "EnableTR69Binary disabled not restarting TR69_process" 
+                else
+                   echo_t "RDKB_SELFHEAL : Resetting process $ProcessName"
+                   cd /usr/ccsp/tr069pa
+                   $BINPATH/CcspTr069PaSsp -subsys $Subsys
+                   cd -
+                fi
 
             elif [ "$SELFHEAL_TYPE" = "BASE" -o "$SELFHEAL_TYPE" = "TCCBR" ] && [ "$ProcessName" == "CcspCMAgentSsp" ]
             then
